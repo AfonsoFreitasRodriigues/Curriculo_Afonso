@@ -1,0 +1,94 @@
+.gta-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: 'Pricedown', 'Arial Black', sans-serif;
+  color: #fff;
+  z-index: 10;
+}
+
+.hud-top-right {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hud-clock { font-size: 24px; color: #FFF; text-shadow: 0 0 8px rgba(255,255,255,0.6); letter-spacing: 2px; }
+
+.hud-wanted .star { color: #333; font-size: 24px; text-shadow: none; }
+.hud-wanted .star.active { color: #FFD700; text-shadow: 0 0 6px #FFD700; }
+
+.hud-life  { font-size: 22px; color: #FF6EC7; text-shadow: 0 0 8px rgba(255,110,199,0.7); }
+.hud-money { font-size: 22px; color: #00FFFF; text-shadow: 0 0 8px rgba(0,255,255,0.7); }
+
+.hud-weapon { font-size: 18px; color: #FFF; text-shadow: 0 0 8px rgba(255,255,255,0.5); letter-spacing: 1px; }
+.hud-weapon.empty { color: #FF4040; text-shadow: 0 0 8px rgba(255,64,64,0.7); }
+
+/* Mira rosa que segue o rato quando estás a pé */
+.crosshair {
+  position: fixed;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border: 2px solid #FF6EC7;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255,110,199,0.8), inset 0 0 4px rgba(255,110,199,0.6);
+  pointer-events: none;
+}
+.crosshair::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: #FF6EC7;
+  border-radius: 50%;
+}
+
+.hud-bottom-left {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+/* Radar estilo Vice City — borda rosa néon, fundo escuro */
+.minimap {
+  border: 2px solid #FF6EC7;
+  border-radius: 3px;
+  background: #050D18;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.8),
+    0 0 10px rgba(255, 110, 199, 0.55),
+    0 0 22px rgba(255, 110, 199, 0.25);
+  display: block;
+}
+
+.radio-label {
+  font-size: 13px;
+  color: #00FFFF;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,255,255,0.3);
+  text-shadow: 0 0 6px rgba(0,255,255,0.8);
+  letter-spacing: 1px;
+}
+
+/* Ecrãs estreitos: encolhe o radar (ancorado ao canto bottom-left) para dar
+   folga extra aos pads de controlo empilhados à direita. */
+@media (max-width: 480px) {
+  .hud-bottom-left {
+    transform: scale(0.75);
+    transform-origin: bottom left;
+  }
+}

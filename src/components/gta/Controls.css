@@ -1,0 +1,64 @@
+.ctrl-pad {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(2, 56px);
+  gap: 4px;
+  z-index: 10;
+  user-select: none;
+  touch-action: none;
+}
+
+/* Pad de ações (F / FIRE) — EMPILHADO acima do d-pad de movimento, ambos
+   ancorados ao mesmo "right", para nunca invadir o radar (bottom-left).
+   d-pad: 2 linhas x 56px + 1 gap de 4px = 116px; + 24px de bottom + ~12px de
+   folga = 152px. */
+.ctrl-pad-right {
+  right: 24px;
+  bottom: 152px;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, 56px);
+}
+
+.ctrl-btn {
+  width: 56px;
+  height: 56px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.08s, border-color 0.08s;
+}
+
+.ctrl-btn:active {
+  background: rgba(255, 110, 199, 0.45);
+  border-color: #FF6EC7;
+}
+
+/* Ecrãs estreitos: controlos mais pequenos para nunca tapar o radar
+   (radar: left 16px, 150px de largura => termina aos 166px). */
+@media (max-width: 480px) {
+  .ctrl-pad {
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(2, 44px);
+    gap: 3px;
+  }
+  .ctrl-pad .ctrl-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
+  }
+  .ctrl-pad-right {
+    /* d-pad menor: 2*44px + 1 gap de 3px = 91px; + 24px bottom + ~9px folga */
+    bottom: 124px;
+    grid-template-rows: repeat(2, 44px);
+  }
+}

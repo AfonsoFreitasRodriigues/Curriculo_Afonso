@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init *)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 1)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" 3a490fd HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 2)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" f6e3d77 HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 3)",
+      "Bash(bash \"C:/Users/fabio.costa/.claire/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" c4fdd43 HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" c4fdd43 HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 4)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" ff836c3 HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 5)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" c0669ef HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 6)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" d87cc98 HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 7)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" 38b6a72 HEAD)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"docs/superpowers/plans/2026-07-13-gta-core-engine.md\" 8)",
+      "Bash(bash \"C:/Users/fabio.costa/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" 8c677c0 HEAD)",
+      "Skill(claude-in-chrome)",
+      "Bash(curl -s http://localhost:5173 -o /dev/null -w \"%{http_code}\")",
+      "Bash(npx vite *)",
+      "Bash(del temp_touch.tmp)",
+      "PowerShell(Set-Content *)",
+      "Bash(node -e \"const p=require\\('./node_modules/@react-three/rapier/package.json'\\); console.log\\(p.version\\)\")",
+      "PowerShell(npm run *)",
+      "PowerShell(git *)",
+      "Bash(C:\\\\Users\\\\fabio.costa\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\6.1.1\\\\skills\\\\subagent-driven-development\\\\scripts\\\\review-package 86ffac9 *)",
+      "Bash(C:\\\\Users\\\\fabio.costa\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\6.1.1\\\\skills\\\\subagent-driven-development\\\\scripts\\\\task-brief *)",
+      "Bash(C:\\\\Users\\\\fabio.costa\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\6.1.1\\\\skills\\\\subagent-driven-development\\\\scripts\\\\review-package 245dac6 *)",
+      "Bash(C:\\\\Users\\\\fabio.costa\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\6.1.1\\\\skills\\\\subagent-driven-development\\\\scripts\\\\review-package 74e7206 *)",
+      "Bash(C:\\\\Users\\\\fabio.costa\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\6.1.1\\\\skills\\\\subagent-driven-development\\\\scripts\\\\review-package 9797558 *)",
+      "Bash(C:\\\\Users\\\\fabio.costa\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\6.1.1\\\\skills\\\\subagent-driven-development\\\\scripts\\\\review-package 78aed9f *)"
+    ]
+  }
+}

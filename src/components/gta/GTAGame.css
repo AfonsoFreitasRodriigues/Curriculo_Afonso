@@ -1,0 +1,67 @@
+.gta-btn {
+  margin-top: 12px;
+  padding: 12px 18px;
+  border: 1px solid #444;
+  background: #111;
+  color: #fff;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.gta-btn:hover {
+  background: #222;
+}
+
+.gta-modal {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 1000;
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid #555;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.gta-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #FF6EC7 0%, #FF4500 40%, #1a1a2e 100%);
+}
+
+.loading-content {
+  text-align: center;
+  color: #fff;
+  font-family: 'Pricedown', 'Arial Black', sans-serif;
+}
+
+.loading-title {
+  font-size: 72px;
+  letter-spacing: 8px;
+  color: #00FFFF;
+  text-shadow: 4px 4px 0 #FF6EC7;
+  margin-bottom: 16px;
+}
+
+.loading-sub {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+}

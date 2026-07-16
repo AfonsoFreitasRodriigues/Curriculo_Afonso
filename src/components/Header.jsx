@@ -1,7 +1,7 @@
 import foto from '../assets/afonso.jpg';
 import './Header.css';
 import PacmanGame from './PacmanGame';
-import GTAGame from './GTAGame';
+import GTAGame from './gta/GTAGame';
 
 function calcularIdade() {
   const nascimento = new Date(2010, 8, 20); // 20 de setembro de 2010
