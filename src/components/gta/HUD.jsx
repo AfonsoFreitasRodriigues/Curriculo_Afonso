@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { BUILDINGS, ROADS, ISLANDS } from './City';
+import { BUILDINGS, ROAD_PATHS, ISLAND_SHAPES, BEACH_SHAPE } from './map';
 import { WEAPONS } from './weapons';
 import './HUD.css';
 
@@ -29,6 +29,30 @@ function fillWorldRect(ctx, toR, cx, cz, lx, lz) {
   ctx.fill();
 }
 
+// Polígono fechado em coordenadas de mundo
+function fillWorldPoly(ctx, toR, points) {
+  ctx.beginPath();
+  points.forEach(([wx, wz], i) => {
+    const p = toR(wx, wz);
+    if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+  });
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Polilinha com espessura (ruas)
+function strokeWorldPath(ctx, toR, points, width) {
+  ctx.beginPath();
+  points.forEach(([wx, wz], i) => {
+    const p = toR(wx, wz);
+    if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+  });
+  ctx.lineWidth = Math.max(1.5, width * RADAR_SCALE);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+}
+
 function drawRadar(canvas, mapState, npcPosArr) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
@@ -44,13 +68,20 @@ function drawRadar(canvas, mapState, npcPosArr) {
   ctx.fillStyle = '#06121F';
   ctx.fillRect(0, 0, W, H);
 
-  // Ilhas (terra)
+  // Ilhas (terra) — contornos reais
   ctx.fillStyle = '#1C261C';
-  ISLANDS.forEach(isl => fillWorldRect(ctx, toR, isl.cx, isl.cz, isl.lx, isl.lz));
+  ISLAND_SHAPES.forEach(isl => fillWorldPoly(ctx, toR, isl.points));
 
-  // Ruas e pontes
-  ctx.fillStyle = '#33475C';
-  ROADS.forEach(r => fillWorldRect(ctx, toR, r.cx, r.cz, r.lx, r.lz));
+  // Praia
+  ctx.fillStyle = '#5A4E2E';
+  fillWorldPoly(ctx, toR, BEACH_SHAPE.points);
+
+  // Ruas e pontes — polilinhas com espessura
+  ctx.strokeStyle = '#33475C';
+  ROAD_PATHS.forEach(r => {
+    if (r.hidden) return;
+    strokeWorldPath(ctx, toR, r.points, r.width);
+  });
 
   // Quarteirões (footprints dos prédios)
   ctx.fillStyle = '#0C141C';

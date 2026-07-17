@@ -68,23 +68,17 @@ function SceneReady({ onReady }) {
   return null;
 }
 
-// Posições e dados dos carros NPC (centralizados para fácil acesso ao radar)
+// Tráfego NPC — cada carro segue uma rua do map.js (lane = offset lateral)
 const NPC_DATA = [
-  // Ilha Oeste — Vespucci Blvd (x=-80, N-S)
-  { start: [-80, 0, -185], end: [-80, 0,  185], speed: 12, color: '#FFD700', phase: 0.00 },
-  { start: [-80, 0,  185], end: [-80, 0, -185], speed: 10, color: '#DC143C', phase: 0.50 },
-  // Ilha Oeste — rua E-W principal (z=0)
-  { start: [-185, 0, 5],   end: [ -25, 0,   5], speed: 11, color: '#4169E1', phase: 0.30 },
-  { start: [ -25, 0, -5],  end: [-185, 0,  -5], speed:  9, color: '#228B22', phase: 0.70 },
-  // Ilha Oeste — Harbor Blvd (x=-150, N-S)
-  { start: [-150, 0, -138], end: [-150, 0, 138], speed:  8, color: '#8B008B', phase: 0.40 },
-  // Ilha Este — Ocean Drive (x=62, N-S)
-  { start: [62, 0, -152],  end: [62, 0,  152],  speed: 11, color: '#FF8C00', phase: 0.20 },
-  { start: [62, 0,  152],  end: [62, 0, -152],  speed:  8, color: '#9400D3', phase: 0.60 },
-  // Ilha Este — rua E-W (z=0)
-  { start: [25, 0, -5],    end: [182, 0, -5],   speed: 10, color: '#008B8B', phase: 0.10 },
-  // Travessia da ponte (z=5, de ilha a ilha)
-  { start: [-185, 0, 5],   end: [ 182, 0,  5],  speed: 13, color: '#B8860B', phase: 0.80 },
+  { pathId: 'vespucci',   lane: 3.5, speed: 12, color: '#FFD700', phase: 0.00 },
+  { pathId: 'vespucci',   lane: 3.5, speed: 10, color: '#DC143C', phase: 0.50 },
+  { pathId: 'coastal',    lane: 3.0, speed:  9, color: '#8B008B', phase: 0.40 },
+  { pathId: 'mainWest',   lane: 3.0, speed: 11, color: '#4169E1', phase: 0.30 },
+  { pathId: 'diagonal',   lane: 2.8, speed: 10, color: '#228B22', phase: 0.70 },
+  { pathId: 'oceanDrive', lane: 3.2, speed: 11, color: '#FF8C00', phase: 0.20 },
+  { pathId: 'oceanDrive', lane: 3.2, speed:  8, color: '#9400D3', phase: 0.60 },
+  { pathId: 'mainEast',   lane: 2.8, speed: 10, color: '#008B8B', phase: 0.10 },
+  { pathId: 'crossing',   lane: 3.0, speed: 13, color: '#B8860B', phase: 0.80 },
 ];
 
 export default function GameCanvas() {
@@ -193,7 +187,7 @@ export default function GameCanvas() {
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', cursor: mode === 'foot' ? 'none' : 'default' }}>
       {loading && <LoadingScreen />}
-      <Canvas shadows dpr={[1, 1.75]} camera={{ fov: 75, near: 0.1, far: 800 }}>
+      <Canvas shadows dpr={[1, 1.5]} camera={{ fov: 75, near: 0.1, far: 800 }} onCreated={({ gl }) => { window.__gl = gl; }}>
         <Suspense fallback={null}>
           {/* Fog atmosférico roxo-escuro — combina com céu de pôr-do-sol */}
           <fog attach="fog" args={['#180830', 150, 450]} />
@@ -202,7 +196,7 @@ export default function GameCanvas() {
           {/* Sol a oeste — dourado intenso */}
           <directionalLight
             position={[-80, 35, -60]} intensity={1.8} color="#FFB060" castShadow
-            shadow-mapSize-width={2048} shadow-mapSize-height={2048}
+            shadow-mapSize-width={1024} shadow-mapSize-height={1024}
             shadow-camera-near={0.5} shadow-camera-far={600}
             shadow-camera-left={-200} shadow-camera-right={200}
             shadow-camera-top={200} shadow-camera-bottom={-200}
@@ -242,7 +236,7 @@ export default function GameCanvas() {
             <NPCCar
               key={i}
               id={`npc-${i}`}
-              start={n.start} end={n.end}
+              pathId={n.pathId} lane={n.lane}
               speed={n.speed} color={n.color} phase={n.phase}
               posRef={npcPosArr.current[i]}
             />

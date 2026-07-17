@@ -569,6 +569,8 @@ git commit -m "feat(gta): mundo 3D organico e radar com formas reais"
 **Files:**
 - Modify: `src/components/gta/NPCCar.jsx`
 - Modify: `src/components/gta/GameCanvas.jsx`
+- Modify: `src/components/gta/PlayerCar.jsx` (só a posição/rotação inicial)
+- Modify: `src/components/gta/CombatSystem.jsx` (só o 3º AMMO_SPOT)
 
 **Interfaces:**
 - Consumes: `getPath(id)`, `pointAt(path, s)` de `./map`.
@@ -649,9 +651,10 @@ export default function NPCCar({ id, pathId, lane = 0, speed = 10, color = '#FFD
     const pt = pointAt(path, s.current);
     const yaw = dir.current > 0 ? pt.yaw : pt.yaw + Math.PI;
     // Faixa: offset perpendicular à direita do sentido de marcha
+    // (direita de forward=(sinψ,cosψ) é (-cosψ, +sinψ))
     const side = lane * dir.current;
-    const x = pt.x + Math.cos(pt.yaw) * side;
-    const z = pt.z - Math.sin(pt.yaw) * side;
+    const x = pt.x - Math.cos(pt.yaw) * side;
+    const z = pt.z + Math.sin(pt.yaw) * side;
     ref.current.position.set(x, 0, z);
     ref.current.rotation.y = yaw;
     // Registry (combate) + radar
@@ -698,13 +701,32 @@ const NPC_DATA = [
           ))}
 ```
 
-- [ ] **Step 3: Verificar build + teste manual completo**
+- [ ] **Step 3: Ajustes de posições de gameplay ao mapa novo**
 
-Run: `npm run build` → `✓ built`. Manual: NPCs acompanham as curvas (yaw a rodar suavemente), faixas separadas nos dois sentidos, carro `crossing` atravessa a ponte, radar com blips coerentes, disparar num NPC em curva funciona, carjacking funciona, conduzir/atropelar intacto.
+Em `PlayerCar.jsx`, no `<RigidBody>`, alinhar o spawn com a mainWest (que passa em `[-80, 6]`), virado a este (frente do carro = -z local, logo yaw -π/2 ⇒ frente = +x):
 
-- [ ] **Step 4: Commit**
+```jsx
+      position={[-80, 1, 6]}
+      rotation={[0, -Math.PI / 2, 0]}
+```
+
+Em `CombatSystem.jsx`, o 3º `AMMO_SPOTS` ficava dentro do edifício novo em `[-148, 0, 42]` — mover:
+
+```js
+const AMMO_SPOTS = [
+  { x: -80, z: -60 },
+  { x: 62, z: 80 },
+  { x: -160, z: 30 },
+];
+```
+
+- [ ] **Step 4: Verificar build + teste manual completo**
+
+Run: `npm run build` → `✓ built`. Manual: NPCs acompanham as curvas (yaw a rodar suavemente), faixas separadas nos dois sentidos (mão direita), carro `crossing` atravessa a ponte, jogador nasce sobre a mainWest virado à ponte, radar com blips coerentes, disparar num NPC em curva funciona, carjacking funciona, conduzir/atropelar intacto, 3 caixas de munição acessíveis.
+
+- [ ] **Step 5: Commit**
 
 ```bash
-git add src/components/gta/NPCCar.jsx src/components/gta/GameCanvas.jsx
+git add src/components/gta/NPCCar.jsx src/components/gta/GameCanvas.jsx src/components/gta/PlayerCar.jsx src/components/gta/CombatSystem.jsx
 git commit -m "feat(gta): trafego por waypoints ao longo das ruas curvas"
 ```

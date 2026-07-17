@@ -1,16 +1,19 @@
 import { useRef, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { ensureCar } from './world';
+import { getPath, pointAt } from './map';
 
 const HIDE_AFTER = 8;     // s: carcaça desaparece
 const RESPAWN_AFTER = 12; // s: renasce na rota
 const JACK_RESPAWN = 20;  // s: renasce depois de roubado
 
-export default function NPCCar({ id, start, end, speed = 10, color = '#FFD700', phase = 0, posRef = null }) {
+export default function NPCCar({ id, pathId, lane = 0, speed = 10, color = '#FFD700', phase = 0, posRef = null }) {
   const ref = useRef();
   const flamesRef = useRef();
-  const t = useRef(phase);
+  const path = useMemo(() => getPath(pathId), [pathId]);
+  const s = useRef(phase * (path ? path.total : 0));
   const dir = useRef(1);
+  const side = useRef(lane); // offset lateral atual (suavizado, evita teleporte ao inverter)
   const [burnt, setBurnt] = useState(false);
 
   const entity = useMemo(() => {
@@ -19,14 +22,8 @@ export default function NPCCar({ id, start, end, speed = 10, color = '#FFD700', 
     return e;
   }, [id, color]);
 
-  const dx = end[0] - start[0];
-  const dz = end[2] - start[2];
-  const dist = Math.sqrt(dx * dx + dz * dz);
-  const yawFwd = Math.atan2(dx, dz);
-  const yawBack = yawFwd + Math.PI;
-
   useFrame(({ clock }, delta) => {
-    if (!ref.current) return;
+    if (!ref.current || !path) return;
     const now = clock.getElapsedTime();
 
     // Roubado pelo jogador: escondido até renascer
@@ -35,7 +32,7 @@ export default function NPCCar({ id, start, end, speed = 10, color = '#FFD700', 
         entity.jacked = false;
         entity.alive = true;
         entity.hp = 100;
-        t.current = phase;
+        s.current = phase * path.total;
       } else {
         ref.current.visible = false;
         if (posRef) { posRef.x = 0; posRef.z = 0; }
@@ -50,7 +47,7 @@ export default function NPCCar({ id, start, end, speed = 10, color = '#FFD700', 
       if (dead >= RESPAWN_AFTER) {
         entity.alive = true;
         entity.hp = 100;
-        t.current = phase;
+        s.current = phase * path.total;
       } else {
         ref.current.visible = dead < HIDE_AFTER;
         if (posRef) { posRef.x = 0; posRef.z = 0; }
@@ -65,26 +62,34 @@ export default function NPCCar({ id, start, end, speed = 10, color = '#FFD700', 
     if (burnt && entity.alive) setBurnt(false);
 
     ref.current.visible = true;
-    t.current += dir.current * speed * delta / dist;
-    if (t.current >= 1) { t.current = 1; dir.current = -1; }
-    if (t.current <= 0) { t.current = 0; dir.current = 1; }
-    const p = t.current;
-    const x = start[0] + dx * p;
-    const z = start[2] + dz * p;
-    const ry = dir.current > 0 ? yawFwd : yawBack;
+    // Avança por comprimento de arco; ping-pong nas pontas
+    s.current += dir.current * speed * delta;
+    if (s.current >= path.total) { s.current = path.total; dir.current = -1; }
+    if (s.current <= 0) { s.current = 0; dir.current = 1; }
+    const pt = pointAt(path, s.current);
+    const yaw = dir.current > 0 ? pt.yaw : pt.yaw + Math.PI;
+    // Faixa: offset perpendicular à direita do sentido de marcha
+    // (direita de forward=(sinψ,cosψ) é (-cosψ, +sinψ)).
+    // O offset aproxima-se do alvo a poucas u/s para o carro não "teleportar"
+    // de faixa quando o ping-pong inverte o sentido nas pontas.
+    const target = lane * dir.current;
+    const diff = target - side.current;
+    side.current += Math.sign(diff) * Math.min(Math.abs(diff), 4 * delta);
+    const x = pt.x - Math.cos(pt.yaw) * side.current;
+    const z = pt.z + Math.sin(pt.yaw) * side.current;
     ref.current.position.set(x, 0, z);
-    ref.current.rotation.y = ry;
+    ref.current.rotation.y = yaw;
     // Registry (combate) + radar
     entity.x = x;
     entity.z = z;
-    entity.ry = ry;
+    entity.ry = yaw;
     if (posRef) { posRef.x = x; posRef.z = z; }
   });
 
   const bodyColor = burnt ? '#1A1A1A' : color;
 
   return (
-    <group ref={ref} position={start}>
+    <group ref={ref}>
       <mesh position={[0, 0.4, 0]} castShadow>
         <boxGeometry args={[1.8, 0.7, 3.5]} />
         <meshStandardMaterial color={bodyColor} />

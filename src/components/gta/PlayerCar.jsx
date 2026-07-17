@@ -86,7 +86,8 @@ export default function PlayerCar({ carRef, active = true, color = '#FF6EC7', on
   return (
     <RigidBody
       ref={carRef}
-      position={[-80, 1, 0]}
+      position={[-80, 1, 6]}
+      rotation={[0, -Math.PI / 2, 0]}
       mass={1}
       friction={0}
       restitution={0}

@@ -15,7 +15,7 @@ const PRESETS = {
 export default function FollowCamera({ targetRef, mode = 'car', yawRef = null }) {
   const { camera } = useThree();
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const target = targetRef.current;
     if (!target) return;
     const pos = target.translation();
@@ -39,7 +39,16 @@ export default function FollowCamera({ targetRef, mode = 'car', yawRef = null })
       pos.y + preset.height,
       pos.z - dirZ * preset.dist
     );
-    camera.position.lerp(_cameraPos, 0.08);
+    // Damping exponencial independente do frame-rate (o lerp fixo por frame
+    // deixava o carro fugir dezenas de unidades à câmara com fps baixo)
+    camera.position.lerp(_cameraPos, 1 - Math.exp(-6 * delta));
+    // Nunca deixar o alvo afastar-se mais de 1.6× da distância de follow
+    const maxD = preset.dist * 1.6;
+    _dir.copy(camera.position).sub(_cameraPos);
+    if (_dir.lengthSq() > maxD * maxD) {
+      _dir.setLength(maxD);
+      camera.position.copy(_cameraPos).add(_dir);
+    }
     _targetPos.set(pos.x, pos.y + preset.lookUp, pos.z);
     camera.lookAt(_targetPos);
   });

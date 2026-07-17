@@ -13,7 +13,7 @@ const _hitPt = new THREE.Vector3();
 const AMMO_SPOTS = [
   { x: -80, z: -60 },
   { x: 62, z: 80 },
-  { x: -150, z: 40 },
+  { x: -160, z: 30 },
 ];
 
 function Tracer({ sx, sz, ex, ez }) {
@@ -68,6 +68,7 @@ export default function CombatSystem({
   const { gl } = useThree();
   const ammoRef = useRef([Infinity, 60, 240]);
   const firingRef = useRef(false);
+  const queuedShotRef = useRef(false); // clique rápido: down+up entre frames não pode perder o tiro
   const semiHandledRef = useRef(false);
   const mouseAimRef = useRef({ nx: 0, ny: 0, mouse: true });
   const lastShotRef = useRef(-10);
@@ -92,6 +93,7 @@ export default function CombatSystem({
       if (e.button !== 0) return;
       if (e.target !== canvas) return; // cliques na UI (botões) não disparam
       firingRef.current = true;
+      queuedShotRef.current = true;
       mouseAimRef.current.mouse = true;
     };
     const onUp = (e) => {
@@ -218,12 +220,19 @@ export default function CombatSystem({
     }
 
     // ── Disparo (só a pé) ──
-    if (mode !== 'foot' || !firingRef.current || !playerRef.current) return;
+    if (mode !== 'foot' || !playerRef.current) return;
+    if (!firingRef.current && !queuedShotRef.current) return;
     const w = WEAPONS[weaponSlot];
-    if (now - lastShotRef.current < 1 / w.rate) return;
+    if (now - lastShotRef.current < 1 / w.rate) return; // tiro em fila espera o cooldown
     if (!w.auto && semiHandledRef.current) return;
-    if (w.maxAmmo !== Infinity && ammoRef.current[weaponSlot] <= 0) return;
-    semiHandledRef.current = true;
+    if (w.maxAmmo !== Infinity && ammoRef.current[weaponSlot] <= 0) {
+      queuedShotRef.current = false;
+      return;
+    }
+    // Só trava o semi-auto se o botão continua premido; um tiro em fila
+    // (botão já solto) não pode bloquear o clique seguinte
+    if (firingRef.current) semiHandledRef.current = true;
+    queuedShotRef.current = false;
 
     lastShotRef.current = now;
     if (w.maxAmmo !== Infinity) {
